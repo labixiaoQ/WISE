@@ -1,0 +1,73 @@
+# Protocol manifest transcribed from Section 4.2, Table 1 and Appendices A.4–A.5.
+# Each table row below is one map-size/condition pair. The Minecraft budgets
+# belong to different map sizes; they are not one shared budget sequence.
+# This is not an installed Minecraft environment or a runnable evaluation preset.
+
+[protocol]
+name = "Large-Scale Exploration"
+description = "Map coverage under simulated and stochastic Minecraft conditions"
+kind = "paper_protocol_manifest"
+source = "Section 4.2, Table 1; Appendices A.4–A.5"
+
+[release]
+runnable = false
+implementation_status = "pending_original_code_migration"
+world_assets_status = "pending_original_asset_migration"
+seed_list_status = "pending_original_asset_migration"
+
+[environment]
+platform = "Minecraft Java Edition via MineDojo/MineRL"
+map_instance_policy = "fixed_instance_per_size_and_condition"
+comparison_control = "same_world_seed_and_fixed_spawn_point_across_methods_within_each_condition"
+# Concrete world seeds, spawn coordinates and assets have not been migrated.
+# The paper does not state an exploration repetition count; no count is assumed.
+
+[evaluation]
+metric = "map_coverage"
+coverage_definition = "unique_cells_visited_or_observed_in_field_of_view_divided_by_map_area"
+count_repeated_observations_once = true
+environment_ticks_per_second = 20
+
+[[conditions]]
+id = "simulated_128"
+setting = "simulated"
+map_size_blocks = [128, 128]
+evaluation_steps = [500, 1000, 6000]
+episode_budget_steps = 6000
+mobs_enabled = false
+terrain_variation_enabled = false
+day_night_cycle_enabled = false
+source = "Table 1(a), 128×128 columns; Appendix A.4"
+
+[[conditions]]
+id = "simulated_384"
+setting = "simulated"
+map_size_blocks = [384, 384]
+evaluation_steps = [1000, 4000, 20000]
+episode_budget_steps = 20000
+mobs_enabled = false
+terrain_variation_enabled = false
+day_night_cycle_enabled = false
+source = "Table 1(a), 384×384 columns; Appendix A.4"
+
+[[conditions]]
+id = "minecraft_128"
+setting = "minecraft_stochastic"
+map_size_blocks = [128, 128]
+evaluation_steps = [5000, 10000]
+episode_budget_steps = 10000
+hostile_mobs_enabled = true
+weather_enabled = true
+day_night_cycle_enabled = true
+source = "Table 1(b), 128×128 columns; Appendices A.4–A.5"
+
+[[conditions]]
+id = "minecraft_384"
+setting = "minecraft_stochastic"
+map_size_blocks = [384, 384]
+evaluation_steps = [20000, 40000]
+episode_budget_steps = 40000
+hostile_mobs_enabled = true
+weather_enabled = true
+day_night_cycle_enabled = true
+source = "Table 1(b), 384×384 columns; Appendices A.4–A.5"

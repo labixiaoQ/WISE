@@ -1,0 +1,82 @@
+# WISE paper configuration: Sections 3.1–3.3, 4.1 and Appendix A.
+# This file records the reported design and defaults. It does not implement or
+# enable the WISE algorithms; the original implementation is being migrated.
+name = "WISE"
+description = "Which-Why Informed Semantic Explorer"
+
+[release]
+kind = "framework_configuration"
+implementation_status = "pending_original_code_migration"
+paper = "WISE: A Long-Horizon Agent in Minecraft with Why-Which Reasoning"
+
+[memory.short_term]
+# Section 3.1.1, Eq. (4); Appendix A.7, Table 4.
+visual_encoder = "MineCLIP"
+temporal_window_frames = 16
+sliding_window_seconds = 60
+top_k = 10
+
+[memory.keyframes]
+# Section 4.1 and Appendix A.7, Table 4.
+entropy_threshold = 0.15
+cosine_threshold = 0.85
+selection = "cluster_and_entropy_with_redundancy_removal"
+
+[memory.grounding]
+# Appendix A.7–A.8. The reported database is NOT bundled in this release.
+threshold = 0.9
+knowledge_base_status = "pending_original_asset_migration"
+paper_reported_knowledge_base_entries = 1534
+
+[memory.retrieval]
+# Appendix A.7, Table 4: visual similarity versus semantic affordance matching.
+lambda_ret = 0.5
+
+[vlm]
+# Appendix A.2–A.3. This is the historical model used in the paper, not a claim
+# about current API availability. No API request is made by the framework CLI.
+model = "gpt-4o-2024-05-13"
+execution = "asynchronous"
+batch_size_frames = 16
+buffer_flush_seconds = 25
+# The 25-second threshold flushes the pending keyframe buffer; the paper does
+# not specify a network request timeout.
+
+[scheduler]
+# Section 3.2, Eq. (7), and Appendix A.7, Table 4.
+urgency_weight = 0.3
+affordance_weight = 0.5
+navigation_cost_weight = 0.2
+# d_max is a map-scale distance normalization constant (Eq. 10). Its numeric
+# value is not specified in the paper and is intentionally omitted here.
+
+[exploration.global]
+# Section 4.1 and Appendix A.7, Table 4.
+strategy = "quadtree"
+depth_weight = 0.6
+distance_weight = 0.4
+max_depth_128 = 5
+max_depth_384 = 6
+
+[exploration.regional]
+# Section 3.3, Eq. (12), and Appendix A.1, Eq. (15).
+strategy = "frontier_refinement"
+weight_status = "normalized_values_pending_original_code_migration"
+# The paper states that coverage, novelty and distance weights are normalized,
+# but does not report their individual numeric values. They are not invented.
+
+[exploration.local]
+# Section 4.1 and Appendix A.1, Eq. (17).
+strategy = "voronoi_completion"
+update_interval_steps = 40
+minimum_unexplored_area_pixels = 60
+weight_status = "normalized_values_pending_original_code_migration"
+# The paper does not report individual area and distance weights.
+
+[exploration.recovery]
+# Appendix A.1: trigger local replanning after fewer than five blocks of travel
+# in thirty seconds; escalate on repeated failure or repeated revisitation.
+stagnation_distance_blocks = 5
+stagnation_window_seconds = 30
+stages = ["local_replanning", "memory_query_target_reset", "graph_rollback"]
+# Escalation repetition thresholds are not specified in the paper.

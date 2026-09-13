@@ -1,10 +1,27 @@
+[build-system]
+requires = ["setuptools>=66", "wheel"]
+build-backend = "setuptools.build_meta"
+
 [project]
-name = "mrsteve"
+name = "wise-minecraft"
 version = "0.1.0"
-description = "Official implementation of MrSteve: Instruction-following Agents in Minecraft with What-Where-When Memory"
+description = "WISE: A Long-Horizon Agent in Minecraft with Why-Which Reasoning"
 readme = "README.md"
 requires-python = ">=3.11"
-dependencies = [
+authors = [
+    {name = "Renmin Cheng"},
+    {name = "Changhao Chen"},
+]
+dependencies = []
+
+[project.urls]
+Paper = "https://openreview.net/forum?id=T8HuiP3yM9"
+
+# Inherited MrSteve environment, kept separate from the lightweight WISE package.
+# The paper reports PyTorch 2.5.1; these are the original baseline pins, not a
+# reproduction environment for the WISE experiments.
+[project.optional-dependencies]
+baseline = [
     "gdown>=5.2.0",
     "gym3>=0.3.3",
     "hydra-core>=1.3.2",
@@ -20,3 +37,11 @@ dependencies = [
     "torch==2.2.2",
     "wheel==0.38.1",
 ]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["wise*", "mrsteve*"]
+namespaces = true
+
+[tool.setuptools.package-data]
+"*" = ["*.json", "*.yaml", "*.txt", "*.png"]

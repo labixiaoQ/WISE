@@ -1,0 +1,56 @@
+# Protocol manifest transcribed from Sections 4.1, 4.3 and Appendices A.4, A.5, C.1.
+# This is not an installed Minecraft environment or a runnable evaluation preset.
+
+[protocol]
+name = "ABA-Sparse"
+description = "Sequential sparse resource acquisition and return localization"
+kind = "paper_protocol_manifest"
+source = "Sections 4.1, 4.3; Appendices A.4, A.5, C.1"
+
+[release]
+runnable = false
+implementation_status = "pending_original_code_migration"
+world_assets_status = "pending_original_asset_migration"
+seed_list_status = "pending_original_asset_migration"
+
+[environment]
+platform = "Minecraft Java Edition via MineDojo/MineRL"
+map_size_blocks = [128, 128]
+layout = "single_fixed_map"
+biomes_and_landmarks = ["mountains", "ponds", "desert", "forest"]
+comparison_control = "identical_map_spawn_protocol_and_initialization_seeds_across_methods"
+# Original world files, concrete initialization seeds and spawn coordinates are
+# required before this manifest can be bound to an environment.
+
+[evaluation]
+episode_budget_steps = 12000
+runs = 2
+episodes_per_run = 50
+total_episodes_per_method = 100
+success_criterion = "complete_all_three_phases_in_prescribed_order_within_budget"
+metrics = ["success_rate", "completion_steps", "return_localization_steps"]
+completion_steps_population = "successful_episodes_only"
+success_rate_population = "all_evaluation_episodes"
+
+[task]
+phase_order = ["A1", "B", "A2"]
+allow_reordering = false
+resource_a_description = "sparse_resource"
+resource_b_description = "distant_denser_resource"
+minimum_a_to_b_distance_blocks = 100
+# C.1 defines A and B symbolically; specific resource bindings and the numeric
+# return-location tolerance are omitted until the original environment is migrated.
+
+[[task.phases]]
+id = "A1"
+objective = "Locate and collect resource A; retain its original position p_A."
+
+[[task.phases]]
+id = "B"
+objective = "Navigate to and collect resource B at least 100 blocks from A."
+
+[[task.phases]]
+id = "A2"
+objective = "Return precisely to the original position p_A using memory."
+# Re-exploration is discouraged by the remaining budget; the paper does not
+# define it as a separate automatic disqualification rule.

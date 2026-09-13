@@ -1,0 +1,64 @@
+# Protocol manifest transcribed from Sections 4.1, 4.4 and Appendices A.4, A.5, C.2.
+# This is not an installed Minecraft environment or a runnable evaluation preset.
+
+[protocol]
+name = "ABC-Sparse"
+description = "Adaptive non-sequential sparse resource acquisition"
+kind = "paper_protocol_manifest"
+source = "Sections 4.1, 4.4; Appendices A.4, A.5, C.2"
+
+[release]
+runnable = false
+implementation_status = "pending_original_code_migration"
+world_assets_status = "pending_original_asset_migration"
+seed_list_status = "pending_original_asset_migration"
+
+[environment]
+platform = "Minecraft Java Edition via MineDojo/MineRL"
+map_size_blocks = [128, 128]
+layout = "single_fixed_map"
+biomes_and_landmarks = ["mountains", "ponds", "desert", "forest"]
+comparison_control = "identical_map_spawn_protocol_and_initialization_seeds_across_methods"
+# Original world files, concrete initialization seeds and spawn coordinates are
+# required before this manifest can be bound to an environment.
+
+[evaluation]
+episode_budget_steps = 12000
+runs = 2
+episodes_per_run = 50
+total_episodes_per_method = 100
+success_criterion = "complete_all_three_objectives_in_any_order_within_budget"
+metrics = ["success_rate", "completion_steps"]
+completion_steps_population = "successful_episodes_only"
+success_rate_population = "all_evaluation_episodes"
+
+[task]
+initial_task_order = ["water", "logs", "beef"]
+allow_reordering = true
+# Section 4.4 reports this order for fixed-sequence policies. WISE may reorder
+# the remaining objectives when a task-relevant opportunity becomes available.
+
+[[task.objectives]]
+id = "A"
+resource = "water"
+instruction = "Find water."
+
+[[task.objectives]]
+id = "B"
+resource = "logs"
+instruction = "Collect logs."
+
+[[task.objectives]]
+id = "C"
+resource = "beef"
+source_entity = "cow"
+instruction = "Obtain beef."
+
+[task.opportunity]
+# Appendix C.2 specifies an opportunistic C spawn at timestep 500, uniformly
+# within 30 blocks of the agent. The actual spawn implementation is pending.
+resource_id = "C"
+entity = "cow"
+spawn_step = 500
+spawn_distribution = "uniform_within_radius_of_agent"
+spawn_radius_blocks = 30
